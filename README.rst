@@ -1,5 +1,13 @@
+=========
+ hexdump
+=========
+
+.. note:: This package disappeared from BitBucket and was resurrected from
+          Pypi, given a new home and package layout, with an actual license
+          and PEP 517 packaging.
 
 What is it about?
+=================
 
 * *dump* binary to hex and *restore* it back
 * Linux / Windows / OS X
