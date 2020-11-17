@@ -110,12 +110,18 @@ run self-tests
 ==============
 Manually::
 
-   $ hexdump.py --test output.txt
+   $ hexdump-py --test output.txt
    $ diff -u3 hextest.txt output.txt
 
 Automatically with `tox`::
 
    $ tox
+
+
+.. note:: The console script is installed as ``hexdump-py`` so as not to
+          conflict with the util-linux command ``hexdump`` or the actual
+          package filename ``hexdump.py`` (the symlink in the top-level
+          source diretcory is provided as a convenience).
 
 
 questions
