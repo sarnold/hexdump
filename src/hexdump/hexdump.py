@@ -31,6 +31,7 @@ __version__ = '3.3-1'
 # --- constants
 PY3K = sys.version_info >= (3, 0)
 
+
 # --- workaround against Python consistency issues
 def normalize_py():
   ''' Problem 001 - sys.stdout in Python is by default opened in
@@ -44,6 +45,7 @@ def normalize_py():
     # set sys.stdout to binary mode on Windows
     import os, msvcrt
     msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+
 
 # --- - chunking helpers
 def chunks(seq, size):
@@ -61,6 +63,7 @@ def chunks(seq, size):
   if m:
     yield seq[d*size:]
 
+
 def chunkread(f, size):
   '''Generator that reads from file like object. May return less
      data than requested on the last read.'''
@@ -68,6 +71,7 @@ def chunkread(f, size):
   while len(c):
     yield c
     c = f.read(size)
+
 
 def genchunks(mixed, size):
   '''Generator to chunk binary sequences or file like objects.
@@ -91,6 +95,7 @@ def dehex(hextext):
     hextext = "".join(hextext.split())
     return hextext.decode('hex')
 
+
 def dump(binary, size=2, sep=' '):
   '''
   Convert binary data (bytes in Python 3 and str in
@@ -102,6 +107,7 @@ def dump(binary, size=2, sep=' '):
   if PY3K:
     hexstr = hexstr.decode('ascii')
   return sep.join(chunks(hexstr.upper(), size))
+
 
 def dumpgen(data):
   '''
@@ -136,7 +142,8 @@ def dumpgen(data):
       else:
         line += '.'
     yield line
-  
+
+
 def hexdump(data, result='print'):
   '''
   Transform binary data to the hex dump text format:
@@ -165,6 +172,7 @@ def hexdump(data, result='print'):
   else:
     raise ValueError('Unknown value of `result` argument')
 
+
 def restore(dump):
   '''
   Restore binary data from a hex dump.
@@ -177,7 +185,7 @@ def restore(dump):
     [x] Far Manager
   '''
   minhexwidth = 2*16    # minimal width of the hex part - 00000... style
-  bytehexwidth = 3*16-1 # min width for a bytewise dump - 00 00 ... style
+  bytehexwidth = 3*16-1  # min width for a bytewise dump - 00 00 ... style
 
   result = bytes() if PY3K else ''
   if type(dump) != str:
@@ -237,7 +245,6 @@ def runtest(logfile=None):
     savedstd = sys.stderr, sys.stdout
     sys.stderr = TeeOutput(sys.stderr, openlog)
     sys.stdout = TeeOutput(sys.stdout, openlog)
-    
 
   def echo(msg, linefeed=True):
     sys.stdout.write(msg)
@@ -280,8 +287,7 @@ def runtest(logfile=None):
   assert next(hexgen) == expected.split('\n')[1], 'hex generator 2 didn\'t match'
 
   # binary restore test
-  bindata = restore(
-'''
+  bindata = restore('''
 00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
 00000010: 00 11 22 33 44 55 66 77  88 99 0A BB CC DD EE FF  .."3DUfw........
 ''')
@@ -289,8 +295,7 @@ def runtest(logfile=None):
   assert bin == bindata, 'restore check failed'
   echo('passed')
 
-  far = \
-'''
+  far = '''\
 000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
 000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 0A BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
 '''
@@ -335,9 +340,13 @@ def main():
   %prog [binfile|-]
   %prog -r hexfile
   %prog --test [logfile]''', version=__version__)
-  parser.add_option('-r', '--restore', action='store_true',
-                                       help='restore binary from hex dump')
-  parser.add_option('--test', action='store_true', help='run hexdump sanity checks')
+  parser.add_option('-r', '--restore',
+                    action='store_true',
+                    help='restore binary from hex dump')
+
+  parser.add_option('--test',
+                    action='store_true',
+                    help='run hexdump sanity checks')
 
   options, args = parser.parse_args()
 
@@ -350,7 +359,7 @@ def main():
     parser.print_help()
     sys.exit(-1)
   else:
-    ## dump file
+    # dump file
     if not options.restore:
       # [x] memory effective dump
       if args[0] == '-':
@@ -361,7 +370,7 @@ def main():
       else:
         hexdump(open(args[0], 'rb'))
 
-    ## restore file
+    # restore file
     else:
       # prepare input stream
       if args[0] == '-':
@@ -380,6 +389,7 @@ def main():
         # Windows - binary mode for sys.stdout to prevent data corruption
         normalize_py()
         sys.stdout.write(restore(instream.read()))
+
 
 if __name__ == '__main__':
   main()
