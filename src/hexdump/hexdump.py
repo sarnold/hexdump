@@ -25,7 +25,7 @@ Far Manager
 import binascii  # binascii is required for Python 3
 import sys
 
-__version__ = '3.3-1'
+__version__ = '3.4.0'
 
 # --- constants
 PY3K = sys.version_info >= (3, 0)

@@ -11,7 +11,7 @@ What is it about?
 
 * *dump* binary to hex and *restore* it back
 * Linux / Windows / OS X
-* Python 2/3
+* Python 3
 * library and command line tool
 
 
