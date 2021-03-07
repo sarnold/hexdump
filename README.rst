@@ -4,7 +4,7 @@
 
 |ci| |wheels| |release| |python|
 
-|tag| |license| |climate|
+|tag| |license| |pylint| |climate|
 
 
 .. note:: This package disappeared from BitBucket and was resurrected from
@@ -199,8 +199,12 @@ Credits
     :target: https://codeclimate.com/github/sarnold/hexdump
     :alt: Maintainability
 
+.. |pylint| image:: https://github.com/sarnold/hexdump/blob/badges/.github/badges/pylint-score.svg
+    :target: https://github.com/sarnold/hexdump/actions?query=workflow:Pylint
+    :alt: Pylint score
+
 .. |license| image:: https://img.shields.io/github/license/sarnold/hexdump
-    :target: https://github.com/sarnold/hexdump/blob/master/LICENSE.txt
+    :target: https://github.com/sarnold/hexdump/blob/master/LICENSE
     :alt: License
 
 .. |tag| image:: https://img.shields.io/github/v/tag/sarnold/hexdump?color=green&include_prereleases&label=latest%20release
