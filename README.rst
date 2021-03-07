@@ -86,7 +86,7 @@ to lookup a value for it in the encoding.
 
 Here is how the same Russian text looks when transformed from
 abstract unicode integers of Python 3 to bytes in Windows-1251
-encoding and to bytes in UTF-8.
+encoding and to bytes in UTF-8::
 
     >>> message = 'интерференция'
     >>> hexdump.hexdump(message.encode('windows-1251'))
