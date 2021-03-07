@@ -1,3 +1,11 @@
+3.4.0 (2021-03-07)
+------------------
+
+  * update tox env/cfg and cleanup some lint and reformat source
+  * revert to original entry-point name, cleanup MANIFEST, update tox
+  * update ci workflows (add release and wheel artifact check)
+  * sync up workflow triggers, run src test with python
+
 3.3 (2015-01-22)
 ----------------
 

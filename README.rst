@@ -2,6 +2,11 @@
  hexdump
 =========
 
+|ci| |wheels| |release| |python|
+
+|tag| |license| |climate|
+
+
 .. note:: This package disappeared from BitBucket and was resurrected from
           Pypi, given a new home and package layout, with an actual license
           and PEP 517 packaging.
@@ -52,7 +57,7 @@ dump(binary, size=2, sep=' ')
 dehex(hextext)
 
     Helper to convert from hex string to binary data
-    stripping whitespaces from `hextext` if necessary.
+    stripping whitespace from `hextext` if necessary.
 
 
 advanced API: write full dumps
@@ -61,19 +66,20 @@ advanced API: write full dumps
 Python 2::
 
     >>> from hexdump import hexdump
-    >>> hexdump.hexdump('\x00'*16)
+    >>> hexdump.hexdump('\x00'*16)  # doctest: +SKIP
     00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
 Python 3::
 
     >>> from hexdump import hexdump
-    >>> hexdump.hexdump('\x00'*16)
+    >>> hexdump.hexdump('\x00'*16)  # doctest: +ELLIPSIS
+    Traceback (most recent call last):
     ...
-    TypeError: Abstract unicode data (expected bytes)
+    TypeError: Abstract unicode data (expected bytes sequence)
     >>> hexdump.hexdump(b'\x00'*16)
     00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
  
-Python 3 string is a sequence of indexes in abstract unicode
+Python 3 string is a sequence of indices in abstract unicode
 table. Each index points to a symbol, which doesn't specify
 its binary value. To convert symbol to binary data, you need
 to lookup a value for it in the encoding.
@@ -97,9 +103,9 @@ Python 2::
 
     >>> res = hexdump.restore(
     ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
-    >>> res
+    >>> res  # doctest: +SKIP
     '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
-    >>> type(res)
+    >>> type(res)  # doctest: +SKIP
     <type 'str'>
 
 Python 3::
@@ -130,17 +136,18 @@ where ``NN`` is your default python version and ``platform`` is one of
 
 
 .. note:: When using an OS package, for example a Gentoo ebuild, the
-          console script should be installed as ``hexdumper`` so as not to
-          conflict with the util-linux command ``hexdump`` or the actual
-          module filename ``hexdump.py`` (the symlink in the top-level
-          source diretcory is provided as a convenience).
+          console script should be installed with a different name, such as
+          ``hexdumper`` so as not to conflict with the util-linux command
+          ``hexdump`` or the actual module filename ``hexdump.py``
+          (the symlink in the top-level source directory is provided
+          as a convenience).
 
 
 questions
 =========
 
 | Q: Why create another module when there is binascii already?
-| A: ``binascii.unhexlify()`` chokes on whitespaces and linefeeds.
+| A: ``binascii.unhexlify()`` chokes on whitespace and linefeeds.
 | ``hexdump.dehex()`` doesn't have this problem.
 
 If you have other questions, feel free to open an issue
@@ -150,74 +157,9 @@ at https://bitbucket.org/techtonik/hexdump/
 ChangeLog
 =========
 
-3.3 (2015-01-22)
- * accept input from sys.stdin if "-" is specified
-   for both dump and restore (issue #1)
- * new normalize_py() helper to set sys.stdout to
-   binary mode on Windows
+See the `HISTORY.rst`_ file for the full change history.
 
-3.2 (2015-07-02)
- * hexdump is now packaged as .zip on all platforms
-   (on Linux created archive was tar.gz)
- * .zip is executable! try `python hexdump-3.2.zip`
- * dump() now accepts configurable separator, patch
-   by Ian Land (PR #3)
-
-3.1 (2014-10-20)
- * implemented workaround against mysterious coding
-   issue with Python 3 (see revision 51302cf)
- * fix Python 3 installs for systems where UTF-8 is
-   not default (Windows), thanks to George Schizas
-   (the problem was caused by reading of README.txt)
-
-3.0 (2014-09-07)
- * remove unused int2byte() helper
- * add dehex(text) helper to convert hex string
-   to binary data
- * add 'size' argument to dump() helper to specify
-   length of chunks
-
-2.0 (2014-02-02)
- * add --restore option to command line mode to get
-   binary data back from hex dump
- * support saving test output with `--test logfile`
- * restore() from hex strings without spaces
- * restore() now raises TypeError if input data is
-   not string
- * hexdump() and dumpgen() now don't return unicode
-   strings in Python 2.x when generator is requested
-
-1.0 (2013-12-30)
- * length of address is reduced from 10 to 8
- * hexdump() got new 'result' keyword argument, it
-   can be either 'print', 'generator' or 'return'
- * actual dumping logic is now in new dumpgen()
-   generator function
- * new dump(binary) function that takes binary data
-   and returns string like "66 6F 72 6D 61 74"
- * new genchunks(mixed, size) function that chunks
-   both sequences and file like objects
-
-0.5 (2013-06-10)
- * hexdump is now also a command line utility (no
-   restore yet)
-
-0.4 (2013-06-09)
- * fix installation with Python 3 for non English
-   versions of Windows, thanks to George Schizas
-
-0.3 (2013-04-29)
- * fully Python 3 compatible
-
-0.2 (2013-04-28)
- * restore() to recover binary data from a hex dump in
-   native, Far Manager and Scapy text formats (others
-   might work as well)
- * restore() is Python 3 compatible
-
-0.1 (2013-04-28)
- * working hexdump() function for Python 2
-
+.. _HISTORY.rst: HISTORY.rst
 
 Release checklist
 =================
@@ -239,3 +181,32 @@ Credits
 | George Schizas  
 | Ian Land
 | Steve Arnold
+
+
+.. |ci| image:: https://github.com/sarnold/hexdump/workflows/CI/badge.svg
+    :target: https://github.com/sarnold/hexdump/actions?query=workflow:CI
+    :alt: CI Status
+
+.. |wheels| image:: https://github.com/sarnold/hexdump/workflows/Wheels/badge.svg
+    :target: https://github.com/sarnold/hexdump/actions?query=workflow:Wheels
+    :alt: Wheels Status
+
+.. |release| image:: https://github.com/sarnold/hexdump/workflows/Release/badge.svg
+    :target: https://github.com/sarnold/hexdump/actions?query=workflow:Release
+    :alt: Release Status
+
+.. |climate| image:: https://img.shields.io/codeclimate/maintainability/sarnold/hexdump
+    :target: https://codeclimate.com/github/sarnold/hexdump
+    :alt: Maintainability
+
+.. |license| image:: https://img.shields.io/github/license/sarnold/hexdump
+    :target: https://github.com/sarnold/hexdump/blob/master/LICENSE.txt
+    :alt: License
+
+.. |tag| image:: https://img.shields.io/github/v/tag/sarnold/hexdump?color=green&include_prereleases&label=latest%20release
+    :target: https://github.com/sarnold/hexdump/releases
+    :alt: GitHub tag
+
+.. |python| image:: https://img.shields.io/badge/python-3.6+-blue.svg
+    :target: https://www.python.org/downloads/
+    :alt: Python

@@ -276,7 +276,7 @@ def runtest(logfile=None):
     import pkgutil
     bin = pkgutil.get_data('hexdump', 'data/hexfile.bin')
 
-    # varios length of input data
+    # various length of input data
     hexdump(b'zzzz' * 12)
     hexdump(b'o' * 17)
     hexdump(b'p' * 24)
@@ -352,10 +352,10 @@ def runtest(logfile=None):
 def main():
     from optparse import OptionParser
     parser = OptionParser(usage='''
-                          %prog [binfile|-]
-                          %prog -r hexfile
-                          %prog --test [logfile]''',
-                          version=__version__)
+  %prog [binfile|-]
+  %prog -r hexfile
+  %prog --test [logfile]''', version=__version__)
+
     parser.add_option('-r',
                       '--restore',
                       action='store_true',
@@ -374,7 +374,7 @@ def main():
             runtest()
     elif not args or len(args) > 1:
         parser.print_help()
-        sys.exit(-1)
+        sys.exit(0)
     else:
         # dump file
         if not options.restore:
