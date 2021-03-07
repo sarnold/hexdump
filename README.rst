@@ -17,38 +17,42 @@ What is it about?
 
 command line
 ============
-There are three ways to execute hexdump.py from command line::
 
-   $ python hexdump.py
-   $ python hexdump-3.2.zip
+There are several ways to execute hexdump from the command line. If you
+are inside the source repository, you can use the convenience symlink::
 
-   # after installing with `pip install hexdump`
-   $ python -m hexdump
+    $ ./hexdump --test
+
+    $ python src/hexdump/hexdump.py
+
+    # after installing with `pip install hexdump`
+    $ hexdump
 
 Dump binary data in hex form::
 
-   $ python -m hexdump binary.dat
-   0000000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
-   0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
+    $ hexdump binary.dat
+    0000000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
+    0000000010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........
 
 Restore binary from a saved hex dump::
 
-   $ python -m hexdump --restore hexdump.txt > binary.dat
+    $ hexdump --restore hexdump.txt > binary.dat
 
 
 basic API
 =========
+
 dump(binary, size=2, sep=' ')
 
-   Convert binary data (bytes in Python 3 and
-   str in Python 2) to string like '00 DE AD BE EF'.
-   `size` argument specifies length of text chunks
-   and `sep` sets chunk separator.
+    Convert binary data (bytes in Python 3 and
+    str in Python 2) to string like '00 DE AD BE EF'.
+    `size` argument specifies length of text chunks
+    and `sep` sets chunk separator.
 
 dehex(hextext)
 
-   Helper to convert from hex string to binary data
-   stripping whitespaces from `hextext` if necessary.
+    Helper to convert from hex string to binary data
+    stripping whitespaces from `hextext` if necessary.
 
 
 advanced API: write full dumps
@@ -56,32 +60,34 @@ advanced API: write full dumps
 
 Python 2::
 
-   >>> hexdump('\x00'*16)
-   00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+    >>> from hexdump import hexdump
+    >>> hexdump.hexdump('\x00'*16)
+    00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
 
 Python 3::
 
-   >>> hexdump('\x00'*16)
-   ...
-   TypeError: Abstract unicode data (expected bytes)
-   >>> hexdump.hexdump(b'\x00'*16)
-   00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+    >>> from hexdump import hexdump
+    >>> hexdump.hexdump('\x00'*16)
+    ...
+    TypeError: Abstract unicode data (expected bytes)
+    >>> hexdump.hexdump(b'\x00'*16)
+    00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
  
 Python 3 string is a sequence of indexes in abstract unicode
 table. Each index points to a symbol, which doesn't specify
 its binary value. To convert symbol to binary data, you need
-to lookup binary a value for in in the encoding.
+to lookup a value for it in the encoding.
 
 Here is how the same Russian text looks when transformed from
 abstract unicode integers of Python 3 to bytes in Windows-1251
 encoding and to bytes in UTF-8.
 
-   >>> message = 'интерференция'
-   >>> hexdump(message.encode('windows-1251'))
-   00000000: E8 ED F2 E5 F0 F4 E5 F0  E5 ED F6 E8 FF           .............
-   >>> hexdump(message.encode('utf-8'))
-   00000000: D0 B8 D0 BD D1 82 D0 B5  D1 80 D1 84 D0 B5 D1 80  ................
-   00000010: D0 B5 D0 BD D1 86 D0 B8  D1 8F                    ..........
+    >>> message = 'интерференция'
+    >>> hexdump.hexdump(message.encode('windows-1251'))
+    00000000: E8 ED F2 E5 F0 F4 E5 F0  E5 ED F6 E8 FF           .............
+    >>> hexdump.hexdump(message.encode('utf-8'))
+    00000000: D0 B8 D0 BD D1 82 D0 B5  D1 80 D1 84 D0 B5 D1 80  ................
+    00000010: D0 B5 D0 BD D1 86 D0 B8  D1 8F                    ..........
 
 
 advanced API: restore binary data from different hexdump formats
@@ -89,44 +95,51 @@ advanced API: restore binary data from different hexdump formats
 
 Python 2::
 
-   >>> res = restore(
-   ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
-   >>> res
-   '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
-   >>> type(res)
-   <type 'str'>
+    >>> res = hexdump.restore(
+    ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
+    >>> res
+    '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
+    >>> type(res)
+    <type 'str'>
 
 Python 3::
 
-   >>> res = restore(
-   ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
-   >>> res
-   b'\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
-   >>> type(res)
-   <class 'bytes'>
+    >>> res = hexdump.restore(
+    ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
+    >>> res
+    b'\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
+    >>> type(res)
+    <class 'bytes'>
 
 
 run self-tests
 ==============
-Manually::
 
-   $ hexdump-py --test output.txt
-   $ diff -u3 hextest.txt output.txt
+Manually, after installing::
 
-Automatically with `tox`::
+    $ hexdump --test
 
-   $ tox
+Or from inside the source repository with `tox`::
+
+    $ tox -e pyNN-platform
+
+where ``NN`` is your default python version and ``platform`` is one of
+``linux``, ``macos``, or ``windows``, for example::
+
+    $ tox -e py38-linux
 
 
-.. note:: The console script is installed as ``hexdump-py`` so as not to
+.. note:: When using an OS package, for example a Gentoo ebuild, the
+          console script should be installed as ``hexdumper`` so as not to
           conflict with the util-linux command ``hexdump`` or the actual
-          package filename ``hexdump.py`` (the symlink in the top-level
+          module filename ``hexdump.py`` (the symlink in the top-level
           source diretcory is provided as a convenience).
 
 
 questions
 =========
-| Q: Why creating another module when there is binascii already?
+
+| Q: Why create another module when there is binascii already?
 | A: ``binascii.unhexlify()`` chokes on whitespaces and linefeeds.
 | ``hexdump.dehex()`` doesn't have this problem.
 
@@ -136,6 +149,7 @@ at https://bitbucket.org/techtonik/hexdump/
 
 ChangeLog
 =========
+
 3.3 (2015-01-22)
  * accept input from sys.stdin if "-" is specified
    for both dump and restore (issue #1)
@@ -216,7 +230,7 @@ Release checklist
 
 License
 =======
-Public Domain
+GNU AGPL-3-or-newer  (see the LICENSE file for details)
 
 
 Credits
@@ -224,3 +238,4 @@ Credits
 | anatoly techtonik <techtonik@gmail.com>  
 | George Schizas  
 | Ian Land
+| Steve Arnold
