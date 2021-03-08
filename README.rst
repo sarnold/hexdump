@@ -151,7 +151,7 @@ questions
 | ``hexdump.dehex()`` doesn't have this problem.
 
 If you have other questions, feel free to open an issue
-at https://bitbucket.org/techtonik/hexdump/
+at https://github.com/sarnold/hexdump/issues
 
 
 ChangeLog
