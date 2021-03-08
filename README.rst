@@ -2,7 +2,7 @@
  hexdump
 =========
 
-|ci| |wheels| |release| |python|
+|ci| |wheels| |conda| |release| |python|
 
 |tag| |license| |pylint| |climate|
 
@@ -189,7 +189,11 @@ Credits
 
 .. |wheels| image:: https://github.com/sarnold/hexdump/workflows/Wheels/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Wheels
-    :alt: Wheels Status
+    :alt: Wheel Status
+
+.. |conda| image:: https://github.com/sarnold/hexdump/workflows/Conda/badge.svg
+    :target: https://github.com/sarnold/hexdump/actions?query=workflow:Conda
+    :alt: Conda Status
 
 .. |release| image:: https://github.com/sarnold/hexdump/workflows/Release/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Release
