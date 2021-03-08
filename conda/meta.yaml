@@ -1,0 +1,48 @@
+{% set name = "hexdump" %}
+{% set version = "3.4.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vvv
+  noarch: python
+  entry_points:
+    - hexdump = hexdump.hexdump:main
+
+requirements:
+  host:
+    - python >=3.6
+    - pip
+
+  run:
+    - python >=3.6
+
+test:
+  imports:
+    - hexdump
+    - hexdump.hexdump
+
+  commands:
+    - hexdump
+    - hexdump --test
+
+
+about:
+  home: https://github.com/sarnold/hexdump
+  license: AGPL-3.0
+  license_family: AGPL
+  license_file: LICENSE
+  summary: binhex in python with a simple API 
+  doc_url: "https://github.com/sarnold/hexdump/blob/master/README.rst"
+  dev_url: "https://github.com/sarnold/hexdump"
+
+
+extra:
+  recipe-maintainers:
+    - sarnold
