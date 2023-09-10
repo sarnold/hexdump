@@ -8,7 +8,7 @@
 
 
 .. note:: This package disappeared from BitBucket and was resurrected from
-          Pypi, given a new home and package layout, with an actual license
+          Pypi and given a new home and package layout, with an actual license
           and PEP 517 packaging.
 
 What is it about?
@@ -78,7 +78,7 @@ Python 3::
     TypeError: Abstract unicode data (expected bytes sequence)
     >>> hexdump.hexdump(b'\x00'*16)
     00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
- 
+
 Python 3 string is a sequence of indices in abstract unicode
 table. Each index points to a symbol, which doesn't specify
 its binary value. To convert symbol to binary data, you need
@@ -164,10 +164,10 @@ See the `HISTORY.rst`_ file for the full change history.
 Release checklist
 =================
 
-| [ ] run tests  
-| [ ] update version in hexdump.py  
-| [ ] update ChangeLog in README.txt from hexdump.py  
-| [ ] python setup.py register sdist upload  
+| [ ] run tests
+| [ ] update version in hexdump.py
+| [ ] update ChangeLog in README.txt from hexdump.py
+| [ ] python setup.py register sdist upload
 
 
 License
@@ -177,8 +177,8 @@ GNU AGPL-3-or-newer  (see the LICENSE file for details)
 
 Credits
 =======
-| anatoly techtonik <techtonik@gmail.com>  
-| George Schizas  
+| anatoly techtonik <techtonik@gmail.com>
+| George Schizas
 | Ian Land
 | Steve Arnold
 
