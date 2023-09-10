@@ -34,7 +34,7 @@ __version__ = '3.4.0'
 
 # --- - chunking helpers
 def chunks(seq, size):
-    '''
+    """
     Generator that cuts sequence (bytes, memoryview, etc.)
     into chunks of given size. If `seq` length is not multiply
     of `size`, the lengh of the last chunk returned will be
@@ -42,19 +42,19 @@ def chunks(seq, size):
 
     >>> list( chunks([1,2,3,4,5,6,7], 3) )
     [[1, 2, 3], [4, 5, 6], [7]]
-    '''
+    """
     d, m = divmod(len(seq), size)
     for i in range(d):
-        yield seq[i * size:(i + 1) * size]
+        yield seq[i * size : (i + 1) * size]
     if m:
-        yield seq[d * size:]
+        yield seq[d * size :]
 
 
 def chunkread(f, size):
-    '''
+    """
     Generator that reads from file like object. May return less
     data than requested on the last read.
-    '''
+    """
     c = f.read(size)
     while len(c):
         yield c
@@ -62,11 +62,11 @@ def chunkread(f, size):
 
 
 def genchunks(mixed, size):
-    '''
+    """
     Generator to chunk binary sequences or file like objects.
     The size of the last chunk returned may be less than
     requested.
-    '''
+    """
     if hasattr(mixed, 'read'):
         return chunkread(mixed, size)
     else:
@@ -85,31 +85,31 @@ def dehex(hextext):
 
 
 def dump(binary, size=2, sep=' '):
-    '''
+    """
     Convert binary data (bytes in Py3) to hex string like '00 DE AD BE EF'.
     `size` argument specifies length of text chunks
     and `sep` sets chunk separator.
-    '''
+    """
     hexstr = binascii.hexlify(binary)
     hexstr = hexstr.decode('ascii')
     return sep.join(chunks(hexstr.upper(), size))
 
 
 def dumpgen(data):
-    '''
+    """
     Generator that produces strings:
 
     '00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................'
-    '''
+    """
     generator = genchunks(data, 16)
     for addr, d in enumerate(generator):
         # 00000000:
         line = '%08X: ' % (addr * 16)
         # 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
         dumpstr = dump(d)
-        line += dumpstr[:8 * 3]
+        line += dumpstr[: 8 * 3]
         if len(d) > 8:  # insert separator if needed
-            line += ' ' + dumpstr[8 * 3:]
+            line += ' ' + dumpstr[8 * 3 :]
         # ................
         # calculate indentation, which may be different for the last line
         pad = 2
@@ -129,7 +129,7 @@ def dumpgen(data):
 
 
 def hexdump(data, result='print'):
-    '''
+    """
     Transform binary data to the hex dump text format:
 
     00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
@@ -141,8 +141,8 @@ def hexdump(data, result='print'):
       'print'     - prints line by line
       'return'    - returns single string
       'generator' - returns generator that produces lines
-    '''
-    if type(data) == str:
+    """
+    if type(data) is str:
         raise TypeError('Abstract unicode data (expected bytes sequence)')
 
     gen = dumpgen(data)
@@ -158,7 +158,7 @@ def hexdump(data, result='print'):
 
 
 def restore(dump):
-    '''
+    """
     Restore binary data from a hex dump.
       [x] dump argument as a string
       [ ] dump argument as a line iterator
@@ -167,12 +167,12 @@ def restore(dump):
       [x] hexdump.hexdump
       [x] Scapy
       [x] Far Manager
-    '''
+    """
     minhexwidth = 2 * 16  # minimal width of the hex part - 00000... style
     bytehexwidth = 3 * 16 - 1  # min width for a bytewise dump - 00 00 ... style
 
     result = bytes()
-    if type(dump) != str:
+    if type(dump) is not str:
         raise TypeError('Invalid data for restore')
 
     text = dump.strip()  # ignore surrounding empty lines
@@ -180,17 +180,17 @@ def restore(dump):
         # strip address part
         addrend = line.find(':')
         if 0 < addrend < minhexwidth:  # : is not in ascii part
-            line = line[addrend + 1:]
+            line = line[addrend + 1 :]
         line = line.lstrip()
         # check dump type
         if line[2] == ' ':  # 00 00 00 ...  type of dump
             # check separator
             sepstart = (2 + 1) * 7 + 2  # ('00'+' ')*7+'00'
-            sep = line[sepstart:sepstart + 3]
+            sep = line[sepstart : sepstart + 3]
             if sep[:2] == '  ' and sep[2:] != ' ':  # ...00 00  00 00...
-                hexdata = line[:bytehexwidth + 1]
+                hexdata = line[: bytehexwidth + 1]
             elif sep[2:] == ' ':  # ...00 00 | 00 00...  - Far Manager
-                hexdata = line[:sepstart] + line[sepstart + 3:bytehexwidth + 2]
+                hexdata = line[:sepstart] + line[sepstart + 3 : bytehexwidth + 2]
             else:  # ...00 00 00 00... - Scapy, no separator
                 hexdata = line[:bytehexwidth]
             line = hexdata
@@ -199,10 +199,11 @@ def restore(dump):
 
 
 def runtest(logfile=None):
-    '''
+    """
     Run hexdump tests. Requires hexfile.bin to be in the same
     directory as hexdump.py itself.
-    '''
+    """
+
     class TeeOutput:
         def __init__(self, stream1, stream2):
             self.outputs = [stream1, stream2]
@@ -259,7 +260,8 @@ def runtest(logfile=None):
     hexdump(b'line\nfeed\r\ntest')
     hexdump(
         b'\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
-        b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\x0A\xBB\xCC\xDD\xEE\xFF')
+        b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\x0A\xBB\xCC\xDD\xEE\xFF'
+    )
     print('---')
     # dumping file-like binary object to screen (default behavior)
     hexdump(binfile)
@@ -268,16 +270,18 @@ def runtest(logfile=None):
     assert hexout == expected, 'returned hex didn\'t match'
     print('return generator')
     hexgen = hexdump(binfile, result='generator')
-    assert next(hexgen) == expected.split(
-        '\n')[0], 'hex generator 1 didn\'t match'
-    assert next(hexgen) == expected.split(
-        '\n')[1], 'hex generator 2 didn\'t match'
+    assert (
+        next(hexgen) == expected.split('\n', maxsplit=1)[0]
+    ), 'hex generator 1 didn\'t match'
+    assert next(hexgen) == expected.split('\n')[1], 'hex generator 2 didn\'t match'
 
     # binary restore test
-    bindata = restore('''
+    bindata = restore(
+        '''
 00000000: 00 00 00 5B 68 65 78 64  75 6D 70 5D 00 00 00 00  ...[hexdump]....
 00000010: 00 11 22 33 44 55 66 77  88 99 0A BB CC DD EE FF  .."3DUfw........
-''')
+'''
+    )
     echo('restore check ', linefeed=False)
     assert binfile == bindata, 'restore check failed'
     echo('passed')
@@ -298,8 +302,7 @@ def runtest(logfile=None):
     assert binfile == restore(scapy), 'scapy format check failed'
     echo('passed')
 
-    assert restore(
-        '5B68657864756D705D') == b'[hexdump]', 'no space check failed'
+    assert restore('5B68657864756D705D') == b'[hexdump]', 'no space check failed'
     assert dump(b'\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
 
     print('---[test file hexdumping]---')
@@ -317,7 +320,6 @@ def runtest(logfile=None):
 
 
 def main(argv=None):
-    debug = False
     if argv is None:
         argv = sys.argv[1:]
     parser = argparse.ArgumentParser(
@@ -337,7 +339,7 @@ def main(argv=None):
         'binfile',
         nargs='?',
         type=argparse.FileType('rb'),
-        help='binary input file or stdin'
+        help='binary input file or stdin',
     )
     parser.add_argument(
         '--test',
@@ -346,7 +348,7 @@ def main(argv=None):
         const=True,
         default=None,
         metavar="LOGFILE",
-        help='run %(prog)s sanity checks with optional logfile'
+        help='run %(prog)s sanity checks with optional logfile',
     )
 
     args = parser.parse_args()

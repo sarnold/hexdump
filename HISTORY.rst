@@ -21,7 +21,7 @@
 
 * hexdump is now packaged as .zip on all platforms
   (on Linux created archive was tar.gz)
-* .zip is executable! try `python hexdump-3.2.zip`
+* .zip is executable! try ``python hexdump-3.2.zip``
 * dump() now accepts configurable separator, patch
   by Ian Land (PR #3)
 
@@ -48,7 +48,7 @@
 
 * add --restore option to command line mode to get
   binary data back from hex dump
-* support saving test output with `--test logfile`
+* support saving test output with ``--test logfile``
 * restore() from hex strings without spaces
 * restore() now raises TypeError if input data is
   not string

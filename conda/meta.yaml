@@ -38,7 +38,7 @@ about:
   license: AGPL-3.0
   license_family: AGPL
   license_file: LICENSE
-  summary: binhex in python with a simple API 
+  summary: binhex in python with a simple API
   doc_url: "https://github.com/sarnold/hexdump/blob/master/README.rst"
   dev_url: "https://github.com/sarnold/hexdump"
 

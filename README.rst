@@ -113,7 +113,7 @@ Manually, after installing::
 
     $ hexdump --test
 
-Or from inside the source repository with `tox`::
+Or from inside the source repository with ``tox``::
 
     $ tox -e pyNN-platform
 
