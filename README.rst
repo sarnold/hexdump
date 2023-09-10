@@ -2,9 +2,11 @@
  hexdump
 =========
 
-|ci| |wheels| |conda| |release| |python|
+|ci| |wheels| |conda| |release|
 
-|tag| |license| |pylint| |climate|
+|pylint|
+
+|tag| |license| |python|
 
 
 .. note:: This package disappeared from BitBucket and was resurrected from
@@ -19,6 +21,7 @@ What is it about?
 * Python 3
 * library and command line tool
 
+.. note:: Python 2 is no longer officially supported as of version 3.5.0.
 
 command line
 ============
@@ -63,12 +66,6 @@ dehex(hextext)
 advanced API: write full dumps
 ==============================
 
-Python 2::
-
-    >>> from hexdump import hexdump
-    >>> hexdump.hexdump('\x00'*16)  # doctest: +SKIP
-    00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-
 Python 3::
 
     >>> from hexdump import hexdump
@@ -98,15 +95,6 @@ encoding and to bytes in UTF-8::
 
 advanced API: restore binary data from different hexdump formats
 ================================================================
-
-Python 2::
-
-    >>> res = hexdump.restore(
-    ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
-    >>> res  # doctest: +SKIP
-    '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
-    >>> type(res)  # doctest: +SKIP
-    <type 'str'>
 
 Python 3::
 
@@ -198,10 +186,6 @@ Credits
 .. |release| image:: https://github.com/sarnold/hexdump/workflows/Release/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Release
     :alt: Release Status
-
-.. |climate| image:: https://img.shields.io/codeclimate/maintainability/sarnold/hexdump
-    :target: https://codeclimate.com/github/sarnold/hexdump
-    :alt: Maintainability
 
 .. |pylint| image:: https://github.com/sarnold/hexdump/blob/badges/.github/badges/pylint-score.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Pylint

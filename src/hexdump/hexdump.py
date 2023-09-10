@@ -24,29 +24,12 @@ Far Manager
 """
 import argparse
 import binascii  # binascii is required for Python 3
+import os
+import pkgutil
 import sys
+import tempfile
 
 __version__ = '3.4.0'
-
-# --- constants
-PY3K = sys.version_info >= (3, 0)
-
-
-# --- workaround against Python consistency issues
-def normalize_py():
-    '''
-    Problem 001 - sys.stdout in Python is by default opened in
-    text mode, and writes to this stdout produce corrupted binary
-    data on Windows
-
-      python -c "import sys; sys.stdout.write('_\n_')" > file
-      python -c "print(repr(open('file', 'rb').read()))"
-    '''
-    if sys.platform == "win32":
-        # set sys.stdout to binary mode on Windows
-        import os
-        import msvcrt
-        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
 
 
 # --- - chunking helpers
@@ -98,23 +81,17 @@ def dehex(hextext):
     Convert from hex string to binary data stripping
     whitespaces from `hextext` if necessary.
     """
-    if PY3K:
-        return bytes.fromhex(hextext)
-    else:
-        hextext = "".join(hextext.split())
-        return hextext.decode('hex')
+    return bytes.fromhex(hextext)
 
 
 def dump(binary, size=2, sep=' '):
     '''
-    Convert binary data (bytes in Python 3 and str in
-    Python 2) to hex string like '00 DE AD BE EF'.
+    Convert binary data (bytes in Py3) to hex string like '00 DE AD BE EF'.
     `size` argument specifies length of text chunks
     and `sep` sets chunk separator.
     '''
     hexstr = binascii.hexlify(binary)
-    if PY3K:
-        hexstr = hexstr.decode('ascii')
+    hexstr = hexstr.decode('ascii')
     return sep.join(chunks(hexstr.upper(), size))
 
 
@@ -144,8 +121,6 @@ def dumpgen(data):
 
         for byte in d:
             # printable ASCII range 0x20 to 0x7E
-            if not PY3K:
-                byte = ord(byte)
             if 0x20 <= byte <= 0x7E:
                 line += chr(byte)
             else:
@@ -167,7 +142,7 @@ def hexdump(data, result='print'):
       'return'    - returns single string
       'generator' - returns generator that produces lines
     '''
-    if PY3K and type(data) == str:
+    if type(data) == str:
         raise TypeError('Abstract unicode data (expected bytes sequence)')
 
     gen = dumpgen(data)
@@ -196,7 +171,7 @@ def restore(dump):
     minhexwidth = 2 * 16  # minimal width of the hex part - 00000... style
     bytehexwidth = 3 * 16 - 1  # min width for a bytewise dump - 00 00 ... style
 
-    result = bytes() if PY3K else ''
+    result = bytes()
     if type(dump) != str:
         raise TypeError('Invalid data for restore')
 
@@ -235,9 +210,8 @@ def runtest(logfile=None):
         # -- methods from sys.stdout / sys.stderr
         def write(self, data):
             for stream in self.outputs:
-                if PY3K:
-                    if 'b' in stream.mode:
-                        data = data.encode('utf-8')
+                if 'b' in stream.mode:
+                    data = data.encode('utf-8')
                 stream.write(data)
                 stream.flush()
 
@@ -274,8 +248,7 @@ def runtest(logfile=None):
     # this doesn't work either
     #   hexfile = osp.dirname(sys.modules[__name__].__file__) + '/hexfile.bin'
     # this works
-    import pkgutil
-    bin = pkgutil.get_data('hexdump', 'data/hexfile.bin')
+    binfile = pkgutil.get_data('hexdump', 'data/hexfile.bin')
 
     # various length of input data
     hexdump(b'zzzz' * 12)
@@ -289,12 +262,12 @@ def runtest(logfile=None):
         b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\x0A\xBB\xCC\xDD\xEE\xFF')
     print('---')
     # dumping file-like binary object to screen (default behavior)
-    hexdump(bin)
+    hexdump(binfile)
     print('return output')
-    hexout = hexdump(bin, result='return')
+    hexout = hexdump(binfile, result='return')
     assert hexout == expected, 'returned hex didn\'t match'
     print('return generator')
-    hexgen = hexdump(bin, result='generator')
+    hexgen = hexdump(binfile, result='generator')
     assert next(hexgen) == expected.split(
         '\n')[0], 'hex generator 1 didn\'t match'
     assert next(hexgen) == expected.split(
@@ -306,7 +279,7 @@ def runtest(logfile=None):
 00000010: 00 11 22 33 44 55 66 77  88 99 0A BB CC DD EE FF  .."3DUfw........
 ''')
     echo('restore check ', linefeed=False)
-    assert bin == bindata, 'restore check failed'
+    assert binfile == bindata, 'restore check failed'
     echo('passed')
 
     far = '''\
@@ -314,7 +287,7 @@ def runtest(logfile=None):
 000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 0A BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
 '''
     echo('restore far format ', linefeed=False)
-    assert bin == restore(far), 'far format check failed'
+    assert binfile == restore(far), 'far format check failed'
     echo('passed')
 
     scapy = '''\
@@ -322,25 +295,18 @@ def runtest(logfile=None):
 00 11 22 33 44 55 66 77 88 99 0A BB CC DD EE FF  .."3DUfw........
 '''
     echo('restore scapy format ', linefeed=False)
-    assert bin == restore(scapy), 'scapy format check failed'
+    assert binfile == restore(scapy), 'scapy format check failed'
     echo('passed')
 
-    if not PY3K:
-        assert restore(
-            '5B68657864756D705D') == '[hexdump]', 'no space check failed'
-        assert dump('\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
-    else:
-        assert restore(
-            '5B68657864756D705D') == b'[hexdump]', 'no space check failed'
-        assert dump(b'\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
+    assert restore(
+        '5B68657864756D705D') == b'[hexdump]', 'no space check failed'
+    assert dump(b'\\\xa1\xab\x1e', sep='').lower() == '5ca1ab1e'
 
     print('---[test file hexdumping]---')
 
-    import os
-    import tempfile
     hexfile = tempfile.NamedTemporaryFile(delete=False)
     try:
-        hexfile.write(bin)
+        hexfile.write(binfile)
         hexfile.close()
         hexdump(open(hexfile.name, 'rb'))
     finally:
