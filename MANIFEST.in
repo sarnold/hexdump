@@ -1,4 +1,2 @@
-graft src
 include *.rst LICENSE
 include tox.ini
-global-exclude *.py[cod] __pycache__
