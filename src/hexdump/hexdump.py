@@ -22,6 +22,7 @@ Far Manager
    as from less exotic strings of raw hex
 
 """
+import argparse
 import binascii  # binascii is required for Python 3
 import sys
 
@@ -227,7 +228,7 @@ def runtest(logfile=None):
     Run hexdump tests. Requires hexfile.bin to be in the same
     directory as hexdump.py itself.
     '''
-    class TeeOutput(object):
+    class TeeOutput:
         def __init__(self, stream1, stream2):
             self.outputs = [stream1, stream2]
 
@@ -349,63 +350,61 @@ def runtest(logfile=None):
         openlog.close()
 
 
-def main():
-    from optparse import OptionParser
-    parser = OptionParser(usage='''
-  %prog [binfile|-]
-  %prog -r hexfile
-  %prog --test [logfile]''', version=__version__)
+def main(argv=None):
+    debug = False
+    if argv is None:
+        argv = sys.argv[1:]
+    parser = argparse.ArgumentParser(
+        usage='''
+        %(prog)s [binfile|-]
+        %(prog)s -r hexfile
+        %(prog)s --test [logfile]''',
+    )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument(
+        '-r',
+        '--restore',
+        nargs='?',
+        help='restore binary from hex dump',
+    )
+    parser.add_argument(
+        'binfile',
+        nargs='?',
+        type=argparse.FileType('rb'),
+        help='binary input file or stdin'
+    )
+    parser.add_argument(
+        '--test',
+        nargs='?',
+        type=str,
+        const=True,
+        default=None,
+        metavar="LOGFILE",
+        help='run %(prog)s sanity checks with optional logfile'
+    )
 
-    parser.add_option('-r',
-                      '--restore',
-                      action='store_true',
-                      help='restore binary from hex dump')
+    args = parser.parse_args()
 
-    parser.add_option('--test',
-                      action='store_true',
-                      help='run hexdump sanity checks')
-
-    options, args = parser.parse_args()
-
-    if options.test:
-        if args:
-            runtest(logfile=args[0])
-        else:
+    if args.test:
+        if args.test is True:
             runtest()
-    elif not args or len(args) > 1:
+        else:
+            runtest(logfile=args.test)
+    elif not len(argv) > 0:
         parser.print_help()
         sys.exit(0)
     else:
         # dump file
-        if not options.restore:
+        if not args.restore:
             # [x] memory effective dump
-            if args[0] == '-':
-                if not PY3K:
-                    hexdump(sys.stdin)
-                else:
-                    hexdump(sys.stdin.buffer)
-            else:
-                hexdump(open(args[0], 'rb'))
-
+            hexdump(args.binfile)
         # restore file
         else:
             # prepare input stream
-            if args[0] == '-':
-                instream = sys.stdin
-            else:
-                if PY3K:
-                    instream = open(args[0])
-                else:
-                    instream = open(args[0], 'rb')
-
+            instream = args.restore
             # output stream
             # [ ] memory efficient restore
-            if PY3K:
-                sys.stdout.buffer.write(restore(instream.read()))
-            else:
-                # Windows - binary mode for sys.stdout to prevent data corruption
-                normalize_py()
-                sys.stdout.write(restore(instream.read()))
+            sys.stdout.buffer.write(restore(instream.read()))
 
 
 if __name__ == '__main__':
