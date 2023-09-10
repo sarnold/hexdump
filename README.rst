@@ -2,9 +2,9 @@
  hexdump
 =========
 
-|ci| |wheels| |conda| |release|
+|ci| |wheels| |conda| |coverage| |release|
 
-|pylint|
+|pre| |cov| |pylint|
 
 |tag| |license| |python|
 
@@ -183,13 +183,21 @@ Credits
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Conda
     :alt: Conda Status
 
+.. |coverage| image:: https://github.com/sarnold/hexdump/actions/workflows/coverage.yml/badge.svg
+    :target: https://github.com/sarnold/hexdump/actions/workflows/coverage.yml
+    :alt: Coverage Status
+
 .. |release| image:: https://github.com/sarnold/hexdump/workflows/Release/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Release
     :alt: Release Status
 
-.. |pylint| image:: https://github.com/sarnold/hexdump/blob/badges/.github/badges/pylint-score.svg
-    :target: https://github.com/sarnold/hexdump/actions?query=workflow:Pylint
-    :alt: Pylint score
+.. |cov| image:: https://raw.githubusercontent.com/sarnold/hexdump/badges/main/test-coverage.svg
+    :target: https://github.com/sarnold/hexdump/
+    :alt: Test coverage
+
+.. |pylint| image:: https://raw.githubusercontent.com/sarnold/hexdump/badges/main/pylint-score.svg
+    :target: https://github.com/sarnold/hexdump/actions/workflows/pylint.yml
+    :alt: Pylint Score
 
 .. |license| image:: https://img.shields.io/github/license/sarnold/hexdump
     :target: https://github.com/sarnold/hexdump/blob/master/LICENSE
@@ -202,3 +210,7 @@ Credits
 .. |python| image:: https://img.shields.io/badge/python-3.6+-blue.svg
     :target: https://www.python.org/downloads/
     :alt: Python
+
+.. |pre| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white
+   :target: https://github.com/pre-commit/pre-commit
+   :alt: pre-commit
