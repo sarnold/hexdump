@@ -29,7 +29,12 @@ import pkgutil
 import sys
 import tempfile
 
-__version__ = '3.4.0'
+if sys.version_info < (3, 8):
+    from importlib_metadata import version
+else:
+    from importlib.metadata import version
+
+VERSION = version('hexdump')
 
 
 # --- - chunking helpers
@@ -328,7 +333,7 @@ def main(argv=None):
         %(prog)s -r hexfile
         %(prog)s --test [logfile]''',
     )
-    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     parser.add_argument(
         '-r',
         '--restore',

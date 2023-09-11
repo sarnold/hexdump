@@ -171,7 +171,7 @@ Credits
 | Steve Arnold
 
 
-.. |ci| image:: https://github.com/sarnold/hexdump/workflows/CI/badge.svg
+.. |ci| image:: https://github.com/sarnold/hexdump/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:CI
     :alt: CI Status
 
