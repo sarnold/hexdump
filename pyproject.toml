@@ -1,5 +1,7 @@
 [build-system]
-requires = ["setuptools>=40.8.0",]
+requires = [
+    "setuptools>=45",
+]
 
 build-backend = "setuptools.build_meta"
 
@@ -13,19 +15,21 @@ markers = "subscript"
 
 [tool.coverage.run]
 branch = true
-source = ["src/hexdump"]
+source = ["src"]
 plugins = ["coverage_python_version"]
 omit = [
-    "setup.py",
-    ".tox",
+    "test/*"
 ]
 
 [tool.coverage.paths]
-source = ["src/hexdump"]
+source = [
+    "src",
+    ".tox/*/site-packages"
+]
 
 [tool.coverage.report]
+fail_under = 80
 show_missing = true
-ignore_errors = true
 exclude_lines = [
     "pragma: no cover",
     "raise NotImplementedError",
