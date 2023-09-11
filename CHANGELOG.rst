@@ -1,5 +1,8 @@
-(unreleased)
-------------
+Changelog
+=========
+
+3.5.0 (2023-09-10)
+------------------
 
 Changes
 ~~~~~~~
@@ -11,6 +14,9 @@ Changes
 
 Other
 ~~~~~
+- Merge pull request #6 from sarnold/cleanup2. [Steve Arnold]
+
+  modernize packaging and tox file
 - Even more modernizing, swap out optparse, swap in argparse. [Stephen L
   Arnold]
 
