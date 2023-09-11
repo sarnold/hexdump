@@ -2,13 +2,15 @@
  hexdump
 =========
 
-|ci| |wheels| |conda| |release| |python|
+|ci| |wheels| |conda| |coverage| |release|
 
-|tag| |license| |pylint| |climate|
+|pre| |cov| |pylint|
+
+|tag| |license| |python|
 
 
 .. note:: This package disappeared from BitBucket and was resurrected from
-          Pypi, given a new home and package layout, with an actual license
+          Pypi and given a new home and package layout, with an actual license
           and PEP 517 packaging.
 
 What is it about?
@@ -19,6 +21,7 @@ What is it about?
 * Python 3
 * library and command line tool
 
+.. note:: Python 2 is no longer officially supported as of version 3.5.0.
 
 command line
 ============
@@ -63,12 +66,6 @@ dehex(hextext)
 advanced API: write full dumps
 ==============================
 
-Python 2::
-
-    >>> from hexdump import hexdump
-    >>> hexdump.hexdump('\x00'*16)  # doctest: +SKIP
-    00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-
 Python 3::
 
     >>> from hexdump import hexdump
@@ -78,7 +75,7 @@ Python 3::
     TypeError: Abstract unicode data (expected bytes sequence)
     >>> hexdump.hexdump(b'\x00'*16)
     00000000: 00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
- 
+
 Python 3 string is a sequence of indices in abstract unicode
 table. Each index points to a symbol, which doesn't specify
 its binary value. To convert symbol to binary data, you need
@@ -99,15 +96,6 @@ encoding and to bytes in UTF-8::
 advanced API: restore binary data from different hexdump formats
 ================================================================
 
-Python 2::
-
-    >>> res = hexdump.restore(
-    ... '0010: 00 11 22 33 44 55 66 77  88 99 AA BB CC DD EE FF  .."3DUfw........')
-    >>> res  # doctest: +SKIP
-    '\x00\x11"3DUfw\x88\x99\xaa\xbb\xcc\xdd\xee\xff'
-    >>> type(res)  # doctest: +SKIP
-    <type 'str'>
-
 Python 3::
 
     >>> res = hexdump.restore(
@@ -125,7 +113,7 @@ Manually, after installing::
 
     $ hexdump --test
 
-Or from inside the source repository with `tox`::
+Or from inside the source repository with ``tox``::
 
     $ tox -e pyNN-platform
 
@@ -164,10 +152,10 @@ See the `HISTORY.rst`_ file for the full change history.
 Release checklist
 =================
 
-| [ ] run tests  
-| [ ] update version in hexdump.py  
-| [ ] update ChangeLog in README.txt from hexdump.py  
-| [ ] python setup.py register sdist upload  
+| [ ] run tests
+| [ ] update version in hexdump.py
+| [ ] update ChangeLog in README.txt from hexdump.py
+| [ ] python setup.py register sdist upload
 
 
 License
@@ -177,13 +165,13 @@ GNU AGPL-3-or-newer  (see the LICENSE file for details)
 
 Credits
 =======
-| anatoly techtonik <techtonik@gmail.com>  
-| George Schizas  
+| anatoly techtonik <techtonik@gmail.com>
+| George Schizas
 | Ian Land
 | Steve Arnold
 
 
-.. |ci| image:: https://github.com/sarnold/hexdump/workflows/CI/badge.svg
+.. |ci| image:: https://github.com/sarnold/hexdump/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:CI
     :alt: CI Status
 
@@ -195,17 +183,21 @@ Credits
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Conda
     :alt: Conda Status
 
+.. |coverage| image:: https://github.com/sarnold/hexdump/actions/workflows/coverage.yml/badge.svg
+    :target: https://github.com/sarnold/hexdump/actions/workflows/coverage.yml
+    :alt: Coverage Status
+
 .. |release| image:: https://github.com/sarnold/hexdump/workflows/Release/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Release
     :alt: Release Status
 
-.. |climate| image:: https://img.shields.io/codeclimate/maintainability/sarnold/hexdump
-    :target: https://codeclimate.com/github/sarnold/hexdump
-    :alt: Maintainability
+.. |cov| image:: https://raw.githubusercontent.com/sarnold/hexdump/badges/main/test-coverage.svg
+    :target: https://github.com/sarnold/hexdump/
+    :alt: Test coverage
 
-.. |pylint| image:: https://github.com/sarnold/hexdump/blob/badges/.github/badges/pylint-score.svg
-    :target: https://github.com/sarnold/hexdump/actions?query=workflow:Pylint
-    :alt: Pylint score
+.. |pylint| image:: https://raw.githubusercontent.com/sarnold/hexdump/badges/main/pylint-score.svg
+    :target: https://github.com/sarnold/hexdump/actions/workflows/pylint.yml
+    :alt: Pylint Score
 
 .. |license| image:: https://img.shields.io/github/license/sarnold/hexdump
     :target: https://github.com/sarnold/hexdump/blob/master/LICENSE
@@ -218,3 +210,7 @@ Credits
 .. |python| image:: https://img.shields.io/badge/python-3.6+-blue.svg
     :target: https://www.python.org/downloads/
     :alt: Python
+
+.. |pre| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&amp;logoColor=white
+   :target: https://github.com/pre-commit/pre-commit
+   :alt: pre-commit

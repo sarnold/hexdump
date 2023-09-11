@@ -1,3 +1,72 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel"]
+requires = [
+    "setuptools>=45",
+    "setuptools_scm[toml]>=6.2",
+]
+
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+#testpaths = ["src/"]
+log_cli =  false
+doctest_optionflags = ["ELLIPSIS", "NORMALIZE_WHITESPACE",]
+addopts = "--strict-markers"
+markers = "subscript"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+plugins = ["coverage_python_version"]
+omit = [
+    "test/*"
+]
+
+[tool.coverage.paths]
+source = [
+    "src",
+    ".tox/*/site-packages"
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "raise AssertionError",
+    "if typing.TYPE_CHECKING:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.black]
+line-length = 90
+skip-string-normalization = true
+include = '\.py$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | build
+  | docs
+  | dist
+  | test
+)/
+'''
+
+[tool.pycln]
+all = true
+
+[tool.isort]
+line_length = 72
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
