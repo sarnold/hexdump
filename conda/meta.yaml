@@ -1,5 +1,5 @@
 {% set name = "hexdump" %}
-{% set version = "3.4.0" %}
+{% set version = "3.5.0" %}
 
 package:
   name: {{ name|lower }}
@@ -19,9 +19,11 @@ requirements:
   host:
     - python >=3.6
     - pip
+    - setuptools-scm
 
   run:
     - python >=3.6
+    - setuptools-scm
 
 test:
   imports:
@@ -35,9 +37,8 @@ test:
 
 about:
   home: https://github.com/sarnold/hexdump
-  license: AGPL-3.0
-  license_family: AGPL
-  license_file: LICENSE
+  license: LGPL-2.1-or-later
+  license_file: ../LICENSE
   summary: binhex in python with a simple API
   doc_url: "https://github.com/sarnold/hexdump/blob/master/README.rst"
   dev_url: "https://github.com/sarnold/hexdump"
