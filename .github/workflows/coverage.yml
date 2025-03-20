@@ -1,12 +1,12 @@
-# internal coverage with PR comment and badge v0.0.5
+# internal coverage with PR comment and badge v0.0.6
 # Note this works for public orgs but only for "internal" pull
 # requests. In the case of fork PRs, there needs to be org-level
 # github app with private key => ACCESS_TOKEN, with more job isolation
 # and output passing in this workflow.
 #
 # This version has updated actions and coverage value regex, no fork isolation
-# yet. This version checks for both repo owner and author_association = MEMBER
-# so PR comments *should* be more available.
+# yet. Badge and comment job logic should be tuned for personal vs org use
+# (fork PRs still needs the big refactor; see badge job comments below).
 name: Coverage
 
 on:
@@ -14,19 +14,21 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   pre_ci:
     name: Prepare CI environment
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     outputs:
       #commit_message: ${{ steps.get_commit_message.outputs.commit_message }}
       branch: ${{ steps.extract_branch.outputs.branch }}
 
     steps:
     - name: Checkout Project
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         # We need to fetch with a depth of 2 for pull_request so we can do HEAD^2
         fetch-depth: 2
@@ -60,13 +62,15 @@ jobs:
 
   base:
     name: Base coverage
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     outputs:
       base_branch: ${{ steps.get_base.outputs.base_branch }}
       base_cov: ${{ steps.get_base.outputs.base_cov }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: badges
         path: badges
@@ -100,7 +104,9 @@ jobs:
 
   check:
     name: Pre CI check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     needs: [pre_ci, base]
 
     steps:
@@ -120,6 +126,9 @@ jobs:
   cov_data:
     name: Generate test coverage data
     runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      pull-requests: write
     needs: [check]
     defaults:
       run:
@@ -128,17 +137,17 @@ jobs:
       coverage: ${{ steps.coverage.outputs.coverage }}
       coverage-rounded-display: ${{ steps.coverage.outputs.coverage-rounded-display }}
     env:
-      PLATFORM: ubuntu-20.04
+      PLATFORM: ubuntu-22.04
       PYTHON: '3.11'
       PYTHONIOENCODING: utf-8
       PIP_DOWNLOAD_CACHE: ${{ github.workspace }}/../.pip_download_cache
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON }}
 
@@ -147,22 +156,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install tox
 
-    - name: Setup old python for test
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.6
-
-    - name: Generate coverage and fix pkg name
+    - name: Generate coverage
       run: |
-        tox -e coverage,py36,py311
+        tox -e py,coverage
 
     - name: Code Coverage Summary Report (data)
-      uses: irongut/CodeCoverageSummary@v1.3.0
+      uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95  # v1.3.0
       with:
         filename: coverage.xml
         output: 'both'
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: src_coverage_rpts
         path: |
@@ -181,7 +185,7 @@ jobs:
         echo "Current coverage is: ${COVERAGE}%"
 
     - name: Code Coverage Summary Report
-      uses: irongut/CodeCoverageSummary@v1.3.0
+      uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95  # v1.3.0
       if: ${{ github.event_name == 'pull_request' }}
       with:
         filename: coverage.xml
@@ -189,7 +193,7 @@ jobs:
         output: 'both'
 
     - name: Add Coverage PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
+      uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728  # v2.9.1
       if: github.event_name == 'pull_request' && (github.event.pull_request.author_association == 'MEMBER' || github.actor == github.repository_owner)
       with:
         header: coverage
@@ -198,7 +202,9 @@ jobs:
 
   test:
     name: Coverage check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     needs: [cov_data, base]
     outputs:
       coverage: ${{ needs.cov_data.outputs.coverage }}
@@ -220,7 +226,10 @@ jobs:
 
   comment_cov_change:
     name: Comment on PR with coverage delta
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
     needs: [test, base]
 
     steps:
@@ -280,7 +289,7 @@ jobs:
         fi
 
     - name: Comment PR with test coverage delta
-      uses: marocchino/sticky-pull-request-comment@v2
+      uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728  # v2.9.1
       if: env.HAVE_BASE_COVERAGE == 'true' && (github.event.pull_request.author_association == 'MEMBER' || github.actor == github.repository_owner)
       with:
         header: delta
@@ -298,7 +307,11 @@ jobs:
     #   - This is a pull request event and the pull actor is the same as the repo owner
     #     if: ${{ ( github.event_name == 'pull_request' && github.actor == github.repository_owner ) || github.ref == 'refs/heads/master' }}
     name: Generate badge image with test coverage value
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    permissions:
+      pull-requests: read
+      contents: write
+      actions: read
     needs: [test, pre_ci]
     if: github.event_name == 'push'
     outputs:
@@ -306,14 +319,14 @@ jobs:
       markdown: ${{ steps.url.outputs.markdown }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: badges
         path: badges
 
     # Use the output from the `coverage` step
     - name: Generate the badge SVG image
-      uses: emibcn/badge-action@v2.0.2
+      uses: emibcn/badge-action@808173dd03e2f30c980d03ee49e181626088eee8  # v2.0.3
       id: badge
       with:
         label: 'Branch Coverage'
@@ -348,7 +361,7 @@ jobs:
         git commit -m "Add/Update badge" || true
 
     - name: Push badge commit
-      uses: ad-m/github-push-action@master
+      uses: ad-m/github-push-action@d91a481090679876dfc4178fef17f286781251df  # v0.8.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: badges
