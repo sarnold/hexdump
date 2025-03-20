@@ -1,13 +1,3 @@
-3.4.0 (2021-03-07)
-------------------
-
-* Add conda recipe and workflow.
-* Add pylint/custom badge workflow.
-* Cleanup doctests so they run with py3.
-* Update tox env/cfg, cleanup some lint, and reformat source
-* Update ci workflows (add release and wheel artifact check)
-* Remove py2 from package, tox, and ci envs.
-
 3.3 (2015-01-22)
 ----------------
 
