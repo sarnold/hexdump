@@ -14,7 +14,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   pre_ci:
@@ -300,12 +300,12 @@ jobs:
     # Only generate and publish if these conditions are met:
     # - The test step ended successfully
     # - One of these is met:
-    #   - This is a push event and the push event is on branch 'master' or 'develop'
+    #   - This is a push event and the push event is on branch 'main' or 'develop'
     # Note: if this repo is personal (ie, not an org repo) then you can
     #       use the following to change the scope of the next 2 jobs
     #       instead of running on branch push as shown below:
     #   - This is a pull request event and the pull actor is the same as the repo owner
-    #     if: ${{ ( github.event_name == 'pull_request' && github.actor == github.repository_owner ) || github.ref == 'refs/heads/master' }}
+    #     if: ${{ ( github.event_name == 'pull_request' && github.actor == github.repository_owner ) || github.ref == 'refs/heads/main' }}
     name: Generate badge image with test coverage value
     runs-on: ubuntu-24.04
     permissions:
