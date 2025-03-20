@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
-          channel-priority: strict
+          channel-priority: flexible
           use-only-tar-bz2: true
           auto-activate-base: true
 
