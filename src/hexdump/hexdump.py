@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: latin-1 -*-
 
 # <-- removing this magic comment breaks Python 3.4 on Windows
 """
@@ -14,8 +13,8 @@ Scapy
 00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF  .."3DUfw........
 
 Far Manager
-000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
-000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 AA BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
+000000000: 00 00 00 5B 68 65 78 64 Â¦ 75 6D 70 5D 00 00 00 00     [hexdump]
+000000010: 00 11 22 33 44 55 66 77 Â¦ 88 99 AA BB CC DD EE FF   ?"3DUfwË†â„¢ÂªÂ»ÃŒÃÃ®Ã¿
 
 
 2. Restore binary data from the formats above as well
@@ -74,8 +73,7 @@ def genchunks(mixed, size):
     """
     if hasattr(mixed, 'read'):
         return chunkread(mixed, size)
-    else:
-        return chunks(mixed, size)
+    return chunks(mixed, size)
 
 
 # --- - /chunking helpers
@@ -147,19 +145,19 @@ def hexdump(data, result='print'):
       'return'    - returns single string
       'generator' - returns generator that produces lines
     """
-    if type(data) is str:
+    if isinstance(data, str):
         raise TypeError('Abstract unicode data (expected bytes sequence)')
 
     gen = dumpgen(data)
     if result == 'generator':
         return gen
-    elif result == 'return':
+    if result == 'return':
         return '\n'.join(gen)
-    elif result == 'print':
+    if result == 'print':
         for line in gen:
             print(line)
-    else:
-        raise ValueError('Unknown value of `result` argument')
+        return
+    raise ValueError('Unknown value of `result` argument')
 
 
 def restore(dump):
@@ -177,7 +175,7 @@ def restore(dump):
     bytehexwidth = 3 * 16 - 1  # min width for a bytewise dump - 00 00 ... style
 
     result = bytes()
-    if type(dump) is not str:
+    if not isinstance(dump, str):
         raise TypeError('Invalid data for restore')
 
     text = dump.strip()  # ignore surrounding empty lines
@@ -292,8 +290,8 @@ def runtest(logfile=None):
     echo('passed')
 
     far = '''\
-000000000: 00 00 00 5B 68 65 78 64 ¦ 75 6D 70 5D 00 00 00 00     [hexdump]
-000000010: 00 11 22 33 44 55 66 77 ¦ 88 99 0A BB CC DD EE FF   ?"3DUfwˆ™ª»ÌÝîÿ
+000000000: 00 00 00 5B 68 65 78 64 Â¦ 75 6D 70 5D 00 00 00 00     [hexdump]
+000000010: 00 11 22 33 44 55 66 77 Â¦ 88 99 0A BB CC DD EE FF   ?"3DUfwË†â„¢ÂªÂ»ÃŒÃÃ®Ã¿
 '''
     echo('restore far format ', linefeed=False)
     assert binfile == restore(far), 'far format check failed'
@@ -324,7 +322,7 @@ def runtest(logfile=None):
         openlog.close()
 
 
-def main(argv=None):
+def main(argv=None):  # pragma: no cover
     if argv is None:
         argv = sys.argv[1:]
     parser = argparse.ArgumentParser(
@@ -381,7 +379,7 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    main()
+    main()  # pragma: no cover
 
 # [x] file restore from command line utility
 # [ ] write dump with LF on Windows for consistency
