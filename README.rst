@@ -158,9 +158,41 @@ Release checklist
 | [ ] python setup.py register sdist upload
 
 
-License
-=======
-GNU AGPL-3-or-newer  (see the LICENSE file for details)
+SBOM and license info
+=====================
+
+This project is now compliant the REUSE Specification Version 3.3, so the
+corresponding license information for all files can be found in the ``REUSE.toml``
+configuration file with license text(s) in the ``LICENSES/`` folder.
+
+Related metadata can be (re)generated with the following tools and command
+examples.
+
+* reuse-tool_ - REUSE_ compliance linting and sdist (source files) SBOM generation
+* sbom4python_ - generate SBOM with full dependency chain
+
+Commands
+--------
+
+Use tox to create the environment and run the lint command::
+
+  $ tox -e reuse                      # --or--
+  $ tox -e reuse -- spdx > sbom.txt   # generate sdist files sbom
+
+Note you can pass any of the other reuse commands after the ``--`` above.
+
+Use the above environment to generate the full SBOM in text format::
+
+  $ source .tox/reuse/bin/activate
+  $ sbom4python --system --use-pip -o <file_name>.txt
+
+Be patient; the last command above may take several minutes. See the
+doc links above for more detailed information on the tools and
+specifications.
+
+.. _reuse-tool: https://github.com/fsfe/reuse-tool
+.. _REUSE: https://reuse.software/spec-3.3/
+.. _sbom4python: https://github.com/anthonyharrison/sbom4python
 
 
 Credits
@@ -199,7 +231,7 @@ Credits
     :target: https://github.com/sarnold/hexdump/actions/workflows/pylint.yml
     :alt: Pylint Score
 
-.. |license| image:: https://img.shields.io/github/license/sarnold/hexdump
+.. |license| image:: https://img.shields.io/badge/license-LGPL_2.1-blue
     :target: https://github.com/sarnold/hexdump/blob/master/LICENSE
     :alt: License
 
@@ -207,7 +239,7 @@ Credits
     :target: https://github.com/sarnold/hexdump/releases
     :alt: GitHub tag
 
-.. |python| image:: https://img.shields.io/badge/python-3.6+-blue.svg
+.. |python| image:: https://img.shields.io/badge/python-3.8+-blue.svg
     :target: https://www.python.org/downloads/
     :alt: Python
 
