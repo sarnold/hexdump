@@ -1,5 +1,5 @@
 {% set name = "hexdump" %}
-{% set version = "3.5.0" %}
+{% set version = "3.5.1" %}
 
 package:
   name: {{ name|lower }}

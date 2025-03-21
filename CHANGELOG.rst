@@ -2,11 +2,14 @@ Changelog
 =========
 
 
-1.7.2 (2025-03-20)
+3.5.1 (2025-03-20)
 ------------------
 
 Changes
 ~~~~~~~
+- Remove py312 from conda workflow, bump changelog and version. [Stephen
+  L Arnold]
+- Update changelog, cleanup tox file and history. [Stephen L Arnold]
 - Try flexible priority for py313, cleanup branch names. [Stephen L
   Arnold]
 - Add reuse config and migrate to LICENSES folder, cleanup lint.
@@ -16,12 +19,20 @@ Changes
 
 Fixes
 ~~~~~
+- Disable py313 in conda workflow, cleanup readme nits. [Stephen L
+  Arnold]
 - Cleanup artifact names for included wheel workflow. [Stephen L Arnold]
 - Update conda recipe with new version, license, depends. [Stephen L
   Arnold]
 
 Other
 ~~~~~
+- Merge pull request #11 from sarnold/nit-fixes. [Steve Arnold]
+
+  Fix some nits
+- Merge pull request #10 from sarnold/changelogs. [Steve Arnold]
+
+  Changelogs and cleanup
 - Merge pull request #9 from sarnold/cruft-cleanup. [Steve Arnold]
 
   Cleanup cruft from separate workflows
