@@ -4,11 +4,8 @@ on:
   push:
     branches: [ "*" ]
 
-permissions:
-  contents: read
-
 jobs:
-  security_check:
+  bandit_check:
     runs-on: ubuntu-22.04
     permissions:
       checks: write # for bandit-report-artifacts to publish the checks
