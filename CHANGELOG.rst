@@ -2,7 +2,37 @@ Changelog
 =========
 
 
-3.5.1 (2025-03-20)
+3.5.2 (2025-07-21)
+------------------
+
+Changes
+~~~~~~~
+- Relax setuptools_scm version, fix mypy error, cleanup test cfg.
+  [Stephen L Arnold]
+
+  * update pre-commit hook versions, apply some format controls
+
+Fixes
+~~~~~
+- Rename bandit workflow job name to workaround weird hang. [Stephen L
+  Arnold]
+
+  * this has been holding up automerge waiting for security_check
+    after it worked fine for a few weeks
+  * remove deprecated 20.04 instance left over in coverage workflow
+- Remove extraneous job name from release workflow. [Stephen L Arnold]
+
+Other
+~~~~~
+- Merge pull request #15 from sarnold/fix-rule-checks. [Steve Arnold]
+
+  CI fixes
+- Merge pull request #13 from sarnold/release-cleanup. [Steve Arnold]
+
+  shared workflow cleanup
+
+
+3.5.1 (2025-03-21)
 ------------------
 
 Changes
@@ -27,6 +57,9 @@ Fixes
 
 Other
 ~~~~~
+- Merge pull request #12 from sarnold/nit-fixes2. [Steve Arnold]
+
+  Conda and changelog
 - Merge pull request #11 from sarnold/nit-fixes. [Steve Arnold]
 
   Fix some nits
@@ -141,5 +174,3 @@ Other
 - Re-format as modern project directory using PEP 517 setup files.
   [Stephen L Arnold]
 - Initial commit. [Steve Arnold]
-
-

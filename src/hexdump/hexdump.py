@@ -93,8 +93,8 @@ def dump(binary, size=2, sep=' '):
     `size` argument specifies length of text chunks
     and `sep` sets chunk separator.
     """
-    hexstr = binascii.hexlify(binary)
-    hexstr = hexstr.decode('ascii')
+    hexbstr = binascii.hexlify(binary)
+    hexstr = hexbstr.decode('ascii')
     return sep.join(chunks(hexstr.upper(), size))
 
 
@@ -261,10 +261,12 @@ def runtest(logfile=None):
     hexdump(b'q' * 26)
     # allowable character set filter
     hexdump(b'line\nfeed\r\ntest')
+    # fmt: off
     hexdump(
         b'\x00\x00\x00\x5B\x68\x65\x78\x64\x75\x6D\x70\x5D\x00\x00\x00\x00'
         b'\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\x0A\xBB\xCC\xDD\xEE\xFF'
     )
+    # fmt: on
     print('---')
     # dumping file-like binary object to screen (default behavior)
     hexdump(binfile)
