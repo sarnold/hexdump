@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "setuptools>=45",
-    "setuptools_scm[toml]>=6.2",
+    "setuptools_scm[toml]>=6.0",
 ]
 
 build-backend = "setuptools.build_meta"
@@ -10,24 +10,28 @@ build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-#testpaths = ["src/"]
+testpaths = ["test",]
 log_cli =  false
 doctest_optionflags = ["ELLIPSIS", "NORMALIZE_WHITESPACE",]
 addopts = "--strict-markers"
 markers = "subscript"
+filterwarnings = [
+    "ignore:currentThread:DeprecationWarning",
+    "ignore:co_lnotab:DeprecationWarning",
+]
 
 [tool.coverage.run]
 branch = true
-source = ["src"]
+source_pkgs = ["src/hexdump"]
 plugins = ["coverage_python_version"]
 omit = [
-    "test/*"
+    "test/*",
+    ".tox/*",
 ]
 
 [tool.coverage.paths]
 source = [
-    "src",
-    ".tox/*/site-packages"
+    "src/hexdump",
 ]
 
 [tool.coverage.report]
