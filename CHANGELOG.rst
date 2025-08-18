@@ -2,7 +2,16 @@ Changelog
 =========
 
 
-3.5.2 (2025-07-21)
+3.5.3 (2025-08-18)
+------------------
+
+Fixes
+~~~~~
+- Remove deprecated version attribute from package metadata. [Stephen L
+  Arnold]
+
+
+3.5.2 (2025-07-22)
 ------------------
 
 Changes
@@ -10,7 +19,7 @@ Changes
 - Relax setuptools_scm version, fix mypy error, cleanup test cfg.
   [Stephen L Arnold]
 
-  * update pre-commit hook versions, apply some format controls
+  * update pre-commit hook versions, apply format controls, update changelog
 
 Fixes
 ~~~~~
@@ -24,6 +33,10 @@ Fixes
 
 Other
 ~~~~~
+- Merge pull request #20 from sarnold/el9-compat-versions. [Steve
+  Arnold]
+
+  packaging and cleanup
 - Merge pull request #15 from sarnold/fix-rule-checks. [Steve Arnold]
 
   CI fixes
