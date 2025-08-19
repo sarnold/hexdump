@@ -7,8 +7,15 @@ Changelog
 
 Fixes
 ~~~~~
+- Update artifact action to match new v5 behavior. [Stephen L Arnold]
 - Remove deprecated version attribute from package metadata. [Stephen L
   Arnold]
+
+Other
+~~~~~
+- Merge pull request #24 from sarnold/packaging-fix. [Steve Arnold]
+
+  packaging fix
 
 
 3.5.2 (2025-07-22)

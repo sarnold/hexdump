@@ -35,10 +35,13 @@ jobs:
 
       # download all artifacts to project dir
       - uses: actions/download-artifact@v5
+        with:
+          name: packages
+          path: packages
 
       - name: check artifacts
         run: |
-          ls -l packages/
+          find . -maxdepth 3 -name hexdump\*
 
       - name: Generate changes file
         uses: sarnold/gitchangelog-action@915234f151ceffb7a8c4f76de77e4ae321087b8f  # v1.1.1
