@@ -207,11 +207,11 @@ Credits
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:CI
     :alt: CI Status
 
-.. |wheels| image:: https://github.com/sarnold/hexdump/workflows/Wheels/badge.svg
+.. |wheels| image:: https://github.com/sarnold/hexdump/actions/workflows/wheels.yml/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Wheels
     :alt: Wheel Status
 
-.. |conda| image:: https://github.com/sarnold/hexdump/workflows/Conda/badge.svg
+.. |conda| image:: https://github.com/sarnold/hexdump/actions/workflows/conda.yml/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Conda
     :alt: Conda Status
 
@@ -219,7 +219,7 @@ Credits
     :target: https://github.com/sarnold/hexdump/actions/workflows/coverage.yml
     :alt: Coverage Status
 
-.. |release| image:: https://github.com/sarnold/hexdump/workflows/Release/badge.svg
+.. |release| image:: https://github.com/sarnold/hexdump/actions/workflows/release.yml/badge.svg
     :target: https://github.com/sarnold/hexdump/actions?query=workflow:Release
     :alt: Release Status
 
