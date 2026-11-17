@@ -1,29 +1,30 @@
 {% set name = "hexdump" %}
-{% set version = "3.5.1" %}
+{% set version = "3.5.3" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  path: ..
+  path: ../
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vvv
+  script: {{ PYTHON }} -m pip install --no-deps --ignore-installed -vvv .
   noarch: python
   entry_points:
     - hexdump = hexdump.hexdump:main
 
 requirements:
   host:
-    - python >=3.6
+    - python
     - pip
-    - setuptools-scm
+    - wheel
+    - setuptools
+    - setuptools_scm
 
   run:
-    - python >=3.6
-    - setuptools-scm
+    - python
 
 test:
   imports:

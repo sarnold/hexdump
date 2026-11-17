@@ -6,20 +6,26 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
         platform: [ubuntu-22.04, windows-latest, macos-latest]
-        python-version: [3.9, '3.10', '3.11']
+        python-version: ['3.10', '3.11', '3.13']
+        solver: ["libmamba"]
+
     runs-on: ${{ matrix.platform }}
     permissions:
       contents: read
     # The setup-miniconda action needs this to activate miniconda
     defaults:
       run:
-        shell: "bash -l {0}"
+        shell: bash -el {0}
 
     steps:
       - uses: actions/checkout@v7
@@ -35,17 +41,25 @@ jobs:
       - name: Get conda
         uses: conda-incubator/setup-miniconda@v4
         with:
+          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
-          channel-priority: flexible
-          use-only-tar-bz2: true
-          auto-activate-base: true
+          conda-remove-defaults: "true"
+          conda-solver: ${{ matrix.solver }}
+          channel-priority: true
+          show-channel-urls: true
 
       - name: Prepare
-        run: conda install conda-build conda-verify
+        run: conda install conda-build
+
+      - name: Conda info
+        run: conda info
+
+      - name: Conda list
+        run: conda list
 
       - name: Build
-        run: conda build conda
+        run: conda-build conda/
 
       - name: Install
         run: conda install -c ${CONDA_PREFIX}/conda-bld/ hexdump
